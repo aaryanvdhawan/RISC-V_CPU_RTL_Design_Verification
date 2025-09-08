@@ -2,19 +2,20 @@ module RISCV_Top (
     input  logic         clk,
     input  logic         reset,
     input  logic [9:0]   sw,         // Switch input for FPGA display bypass
-    output logic [31:0]  pc_out,
-    output logic [31:0]  instr_out,
-    output logic [31:0]  alu_result_out,
-    output logic         mem_write_out,
-    output logic [31:0]  write_data_out
+    // output logic [31:0]  pc_out,
+    // output logic [31:0]  instr_out,
+    // output logic [31:0]  alu_result_out,
+    // output logic         mem_write_out,
+    // output logic [31:0]  write_data_out
+    output logic [31:0]  write_back_data
 );
 
     // Wires for inter-module connections
-    logic        regWrite, memRead, memWrite, branch, memToReg, aluSrc, jump;
+    logic        regWrite, memWrite, branch, aluSrc, jump;
     logic [1:0]  aluOp, ImmSrc, ResultSrc;
     logic [3:0]  alu_ctrl;
     logic [31:0] instr, pc, pc_next, pc_plus_4, pc_target;
-    logic [31:0] imm, rs1_data, rs2_data, alu_result, read_data, write_back_data;
+    logic [31:0] imm, rs1_data, rs2_data, alu_result, read_data;
     logic        zero_flag;
 
     // Program Counter
@@ -37,19 +38,16 @@ module RISCV_Top (
             pc <= pc_next;
     end
 
-    assign pc_out = pc;
+    // assign pc_out = pc;
 
     // Instruction Memory
-    instruction_mem #(
-        .ADDR_WIDTH(10),
-        .DATA_WIDTH(32)
-    ) imem (
+    instruction_mem imem (
+        .pc(pc),
         .clk(clk),
-        .rst(reset),
-        .pc(pc[11:2]),
+        .reset(reset),
         .instr_out(instr)
     );
-    assign instr_out = instr;
+    // assign instr_out = instr;
 
     // Instruction Decode
     logic [6:0] opcode;
@@ -68,10 +66,8 @@ module RISCV_Top (
     ControlUnit ctrl (
         .opcode(opcode),
         .regWrite(regWrite),
-        .memRead(memRead),
         .memWrite(memWrite),
         .branch(branch),
-        .memToReg(memToReg),
         .aluOp(aluOp),
         .aluSrc(aluSrc),
         .ImmSrc(ImmSrc),
@@ -89,7 +85,6 @@ module RISCV_Top (
     // Register File
     RegFile reg_file (
         .clk(clk),
-        .rst(reset),
         .rs1_addr(rs1),
         .rs2_addr(rs2),
         .rd_addr(rd),
@@ -119,7 +114,7 @@ module RISCV_Top (
         .result(alu_result),
         .zero(zero_flag)
     );
-    assign alu_result_out = alu_result;
+    // assign alu_result_out = alu_result;
 
     assign pc_target = pc + imm;
 
@@ -134,8 +129,8 @@ module RISCV_Top (
         .sw(sw), // Not used in simulation
         .hex_led_data() // Not used in simulation
     );
-    assign mem_write_out = memWrite;
-    assign write_data_out = rs2_data;
+    // assign mem_write_out = memWrite;
+    // assign write_data_out = rs2_data;
 
 
     // Write Back Mux

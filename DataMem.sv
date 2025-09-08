@@ -15,6 +15,12 @@ module DataMem (
     // Read operation (asynchronous)
     assign rdata = mem[addr[11:2]];
 
+    initial begin
+        for (int i = 0; i < 1024; i++) begin
+            mem[i] = 32'b0;
+        end
+    end
+
     // Write operation (synchronous), with synchronous reset
     always_ff @(posedge clk) begin
         if (rst) begin

@@ -1,10 +1,8 @@
 module ControlUnit (
     input  logic [6:0] opcode,
     output logic       regWrite,
-    output logic       memRead,
     output logic       memWrite,
     output logic       branch,
-    output logic       memToReg,
     output logic [1:0] aluOp,
     output logic       aluSrc,
     output logic [1:0] ImmSrc,
@@ -15,10 +13,8 @@ module ControlUnit (
     always_comb begin
         // Default values
         regWrite  = 0;
-        memRead   = 0;
         memWrite  = 0;
         branch    = 0;
-        memToReg  = 0;
         aluOp     = 2'b00;
         aluSrc    = 0;
         ImmSrc    = 2'b00;
@@ -36,8 +32,6 @@ module ControlUnit (
             end
             7'b0000011: begin // Load (e.g., LW)
                 regWrite  = 1;
-                memRead   = 1;
-                memToReg  = 1;
                 aluOp     = 2'b00;
                 aluSrc    = 1;
                 ImmSrc    = 2'b00;
@@ -62,7 +56,7 @@ module ControlUnit (
             end
             7'b0010011: begin // I-type (e.g., ADDI)
                 regWrite  = 1;
-                aluOp     = 2'b11;
+                aluOp     = 2'b10;
                 aluSrc    = 1;
                 ImmSrc    = 2'b00;
                 ResultSrc = 2'b00; // ALU result
