@@ -7,7 +7,6 @@ module DataMem (
     output logic [31:0] rdata,      // Read data
     input  logic [9:0]  sw,         // Switch input for FPGA display bypass
     output logic [31:0] hex_led_data // Output to hex/LEDs
-)
 );
 
     // 4KB memory (1024 x 32-bit words)

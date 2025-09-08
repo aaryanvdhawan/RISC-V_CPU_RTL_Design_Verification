@@ -6,7 +6,6 @@ module RISCV_Top (
     output logic [31:0]  instr_out,
     output logic [31:0]  alu_result_out,
     output logic         mem_write_out,
-    input  logic [31:0]  read_data_in,
     output logic [31:0]  write_data_out
 );
 
@@ -132,7 +131,7 @@ module RISCV_Top (
         .addr(alu_result),
         .wdata(rs2_data),
         .rdata(read_data),
-        .sw(10'b0), // Not used in simulation
+        .sw(sw), // Not used in simulation
         .hex_led_data() // Not used in simulation
     );
     assign mem_write_out = memWrite;
