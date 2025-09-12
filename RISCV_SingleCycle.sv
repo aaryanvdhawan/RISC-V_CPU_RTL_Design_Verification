@@ -1,12 +1,7 @@
 module RISCV_Top (
     input  logic         clk,
     input  logic         reset,
-    input  logic [9:0]   sw,         // Switch input for FPGA display bypass
-    // output logic [31:0]  pc_out,
-    // output logic [31:0]  instr_out,
-    // output logic [31:0]  alu_result_out,
-    // output logic         mem_write_out,
-    // output logic [31:0]  write_data_out
+    input  logic         start,
     output logic [31:0]  write_back_data
 );
 
@@ -34,8 +29,10 @@ module RISCV_Top (
     always_ff @(posedge clk or posedge reset) begin
         if (reset)
             pc <= 32'h0;
-        else
+        else if(start)
             pc <= pc_next;
+        else
+            pc <= pc; // Hold the PC value if start is not high
     end
 
     // assign pc_out = pc;
@@ -45,6 +42,7 @@ module RISCV_Top (
         .pc(pc),
         .clk(clk),
         .reset(reset),
+        .start(start),
         .instr_out(instr)
     );
     // assign instr_out = instr;
@@ -125,9 +123,7 @@ module RISCV_Top (
         .we(memWrite),
         .addr(alu_result),
         .wdata(rs2_data),
-        .rdata(read_data),
-        .sw(sw), // Not used in simulation
-        .hex_led_data() // Not used in simulation
+        .rdata(read_data)
     );
     // assign mem_write_out = memWrite;
     // assign write_data_out = rs2_data;

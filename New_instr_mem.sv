@@ -30,12 +30,6 @@ module IMEM #(
         end
     end
 
-    // If reset or write_enable is not active, read instruction from memory combinationally
-    always_comb begin
-        if (!reset && !write_enable) begin
-            instr_out = mem[pc[11:2]]; // Use bits [11:2] of PC for word-aligned access
-
-        end
-    end
+    assign instr_out = write_enable ? '0 : mem[pc[11:2]];
 
 endmodule

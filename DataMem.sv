@@ -4,9 +4,7 @@ module DataMem (
     input  logic        we,         // Write enable
     input  logic [31:0] addr,       // 32-bit address
     input  logic [31:0] wdata,      // Write data
-    output logic [31:0] rdata,      // Read data
-    input  logic [9:0]  sw,         // Switch input for FPGA display bypass
-    output logic [31:0] hex_led_data // Output to hex/LEDs
+    output logic [31:0] rdata      // Read data
 );
 
     // 4KB memory (1024 x 32-bit words)
@@ -32,8 +30,5 @@ module DataMem (
         end
     end
 
-    // FPGA display bypass
-    // Expose selected memory location to hex/LEDs
-    assign hex_led_data = mem[sw];
 
 endmodule
