@@ -1,7 +1,12 @@
-module RISCV_Top (
+module RISCV_SingleCycle (
     input  logic         clk,
     input  logic         reset,
-    input  logic         start,
+    input  logic         start,       
+    input  logic [31:0]  Imem_write_instr,
+    input  logic         Imem_write_en,
+    input  logic         Up,
+    input  logic         Down,
+    output logic   [31:0]  pc,
     output logic [31:0]  write_back_data
 );
 
@@ -9,43 +14,52 @@ module RISCV_Top (
     logic        regWrite, memWrite, branch, aluSrc, jump;
     logic [1:0]  aluOp, ImmSrc, ResultSrc;
     logic [3:0]  alu_ctrl;
-    logic [31:0] instr, pc, pc_next, pc_plus_4, pc_target;
+    logic [31:0] instr, instr_out, pc, pc_next, pc_plus_4, pc_target;
     logic [31:0] imm, rs1_data, rs2_data, alu_result, read_data;
     logic        zero_flag;
 
     // Program Counter
     assign pc_plus_4 = pc + 32'd4;
 
-    always_comb begin
-        if (jump)
-            pc_next = pc_target;
-        else if (branch & zero_flag)
-            pc_next = pc_target;
-        else
-            pc_next = pc_plus_4;
-    end
+    assign pc_next = ((branch & zero_flag) | jump) ? pc_target : pc_plus_4;
 
     // Instantiate Program Counter
-    always_ff @(posedge clk or posedge reset) begin
-        if (reset)
+    always_ff @(posedge clk) begin
+        if (reset) begin
             pc <= 32'h0;
-        else if(start)
+        end else if(start) 
             pc <= pc_next;
+        else if (Up && !start && !Down)
+            pc <= pc + 4;
+        else if (Down && !start && !Up)
+            pc <= pc - 4;
         else
-            pc <= pc; // Hold the PC value if start is not high
+            pc <= pc; // Hold the PC value if neither Up nor Down is high
     end
 
-    // assign pc_out = pc;
+    // always_ff @(posedge clk) begin
+    //     if (reset) begin
+    //         pc <= 32'h0;
+    //     end else begin
+    //         case ({start, Up, Down})
+    //             3'b100: pc <= pc_next; // Start
+    //             3'b010: pc <= pc + 4;    // Up
+    //             3'b001: pc <= pc - 4;    // Down
+    //             default: pc <= pc;        // Hold
+    //     endcase
+    //     end
+    // end
 
     // Instruction Memory
-    instruction_mem imem (
+    instruction_mem instr_mem (
         .pc(pc),
         .clk(clk),
-        .reset(reset),
-        .start(start),
-        .instr_out(instr)
+        .write_instr(Imem_write_instr),
+        .write_en(Imem_write_en),
+        .instr_out(instr_out)
     );
-    // assign instr_out = instr;
+
+   assign instr = start ? instr_out : 32'b0;
 
     // Instruction Decode
     logic [6:0] opcode;
@@ -61,6 +75,7 @@ module RISCV_Top (
     assign funct7 = instr[31:25];
 
     // Control Unit
+    (* dont_touch  = "yes" *)
     ControlUnit ctrl (
         .opcode(opcode),
         .regWrite(regWrite),
@@ -74,6 +89,7 @@ module RISCV_Top (
     );
 
     // Sign Extend
+    (* dont_touch  = "yes" *)
     SignExtend imm_gen (
         .instr(instr[31:7]),
         .ImmSrc(ImmSrc),
@@ -93,6 +109,7 @@ module RISCV_Top (
     );
 
     // ALU Control
+    (* dont_touch  = "yes" *)
     ALUControl alu_control (
         .funct7(funct7),
         .funct3(funct3),
@@ -119,16 +136,12 @@ module RISCV_Top (
     // Data Memory
     DataMem data_mem (
         .clk(clk),
-        .rst(reset),
         .we(memWrite),
         .addr(alu_result),
         .wdata(rs2_data),
         .rdata(read_data)
     );
-    // assign mem_write_out = memWrite;
-    // assign write_data_out = rs2_data;
-
-
+    
     // Write Back Mux
     always_comb begin
         case (ResultSrc)
