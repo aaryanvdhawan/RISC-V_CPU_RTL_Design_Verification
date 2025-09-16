@@ -47,7 +47,7 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 ---
 
 
-## 1. Formal Verification module: `RISCV_Verification_Properties`
+## 2. Formal Verification module: `RISCV_Verification_Properties`
 
 ```verilog
 module RISCV_Verification (
@@ -283,7 +283,9 @@ endmodule
 
 ---
 
-## 2. Testbench: `RISV_tb`
+
+
+## 3. Testbench: `RISV_tb`
 
 ```verilog
 `timescale 1ns / 1ps
