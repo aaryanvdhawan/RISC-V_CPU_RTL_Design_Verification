@@ -280,11 +280,11 @@ module RISCV_Verification (
     end
 
 endmodule
-
 ---
 
 
-## **3. Testbench: `RISV_tb`**
+
+3. Testbench: `RISV_tb`
 
 ```verilog
 `timescale 1ns / 1ps
