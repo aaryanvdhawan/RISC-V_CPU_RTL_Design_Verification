@@ -47,7 +47,7 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 ---
 
 
-## 1. Verification Module: `RISCV_Verification`
+## 1. Formal Verification module: `RISCV_Verification_Properties`
 
 ```verilog
 module RISCV_Verification (
