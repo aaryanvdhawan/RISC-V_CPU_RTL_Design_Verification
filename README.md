@@ -1,4 +1,4 @@
-# RISC-V Verification Module and Testbench
+# RISC-V Formal Verification Module and Testbench
 
 This document contains a SystemVerilog verification module for a RISCV single-cycle CPU along with its testbench. The verification module checks registers, memory, and instruction execution correctness.
 
