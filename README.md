@@ -20,7 +20,7 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 | 0x01C   | beq x5, x7, end    | 0x02728863 | if x5 == x7, jump to end (not taken)|
 | 0x020   | slt x4, x3, x4     | 0x0041A233 | x4 = (12 < 7) = 0                    |
 | 0x024   | beq x4, x0, around | 0x00020463 | if x4 == 0, jump to around (taken)   |
-| 0x028   | addi x5, x0, 0     | 0x00000293 | skipped (branch taken             |
+| 0x028   | addi x5, x0, 0     | 0x00000293 | skipped (branch taken)             |
 | 0x02C   | slt x4, x7, x2     | 0x0023A233 | x4 = (3 < 5) = 1                     |
 | 0x030   | add x7, x4, x5     | 0x005203B3 | x7 = 1 + 11 = 12                     |
 | 0x034   | sub x7, x7, x2     | 0x402383B3 | x7 = 12 - 5 = 7                      |
