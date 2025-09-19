@@ -10,6 +10,9 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 
 # RV32I Verification Program Table
 
+We used the following link to generate the instruction code for verification of our CPU architecture :
+
+https://luplab.gitlab.io/rvcodecjs/
 | Address | Instruction          | Hex       | Description                         |
 |---------|----------------------|-----------|-------------------------------------|
 | 0x000   | `nop`                | 0x00000000 | No operation                        |
