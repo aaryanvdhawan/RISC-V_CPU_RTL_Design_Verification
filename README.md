@@ -37,7 +37,7 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 | 0x058   | `addi x11, x0, 0`    | 0x00000593 | x11 = 0                             |
 | 0x05C   | `addi x11, x11, 1`   | 0x00158593 | x11 = 1                             |
 | 0x060   | `addi x10, x10, -1`  | 0xFFF50513 | x10 = 4                             |
-| 0x064   | `beq x10, x0, ?`     | 0xFE0558E3 | if (4==0)? not taken                |
+| 0x064   | `beq x10, x0, -16`     | 0xFE0558E3 | if (4==0)? not taken                |
 | 0x068   | `sw x11, 100(x0)`     | 0x06B02223 | Mem[25] = 1                       |
 | 0x06C   | `lw x12, 100(x0)`    | 0x06402603 | x12 = Mem[25]                      |
 | 0x070   | `slli x13,x12,2  `   | 0x00261693 | x13 = 4                             |
