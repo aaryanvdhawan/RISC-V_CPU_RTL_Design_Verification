@@ -26,20 +26,20 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 | 0x02C   | `slt x4, x7, x2`     | 0x0023A233 | x4 = (3 < 5) = 1                    |
 | 0x030   | `add x7, x4, x5`     | 0x005203B3 | x7 = 1 + 11 = 12                    |
 | 0x034   | `sub x7, x7, x2`     | 0x402383B3 | x7 = 12 - 5 = 7                     |
-| 0x038   | `sw x7, 84(x3)`      | 0x0471AA23 | Mem[12+84=96] = 7                   |
-| 0x03C   | `lw x2, 96(x0)`      | 0x06002103 | x2 = Mem[96] = 7                    |
+| 0x038   | `sw x7, 84(x3)`      | 0x0471AA23 | Mem[24] = 7                   |
+| 0x03C   | `lw x2, 96(x0)`      | 0x06002103 | x2 = Mem[24] = 7                    |
 | 0x040   | `add x9, x2, x5`     | 0x005104B3 | x9 = 7 + 11 = 18                    |
 | 0x044   | `jal x0, 8` (jmp)    | 0x0080006F | PC = 0x04C (no x1 writeback)        |
 | 0x048   | `addi x2, x0, 1`     | 0x00100113 | skipped (due to jump)               |
 | 0x04C   | `add x2, x2, x9`     | 0x00910133 | x2 = 7 + 18 = 25                    |
-| 0x050   | `sw x2, 32(x3)`      | 0x0221A023 | Mem[12+32=44] = 25                  |
+| 0x050   | `sw x2, 32(x3)`      | 0x0221A023 | Mem[11] = 25                  |
 | 0x054   | `addi x10, x0, 5`    | 0x00500513 | x10 = 5                             |
 | 0x058   | `addi x11, x0, 0`    | 0x00000593 | x11 = 0                             |
 | 0x05C   | `addi x11, x11, 1`   | 0x00158593 | x11 = 1                             |
 | 0x060   | `addi x10, x10, -1`  | 0xFFF50513 | x10 = 4                             |
 | 0x064   | `beq x10, x0, ?`     | 0xFE0558E3 | if (4==0)? not taken                |
-| 0x068   | `sw x11, 100(x0)`     | 0x06B02223 | Mem[100] = 1                       |
-| 0x06C   | `lw x12, 100(x0)`    | 0x06402603 | x12 = Mem[100]                      |
+| 0x068   | `sw x11, 100(x0)`     | 0x06B02223 | Mem[25] = 1                       |
+| 0x06C   | `lw x12, 100(x0)`    | 0x06402603 | x12 = Mem[25]                      |
 | 0x070   | `slli x13,x12,2  `   | 0x00261693 | x13 = 4                             |
 | 0x074   | `srli x14,x13,1`     | 0x0016D713 | x14 = 2                             |
 | 0x078   | `srai x15,x14,2`     | 0x40275793 | x15 = 0                             |
