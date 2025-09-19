@@ -8,41 +8,44 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 
 ## 1. Instruction Table
 
-| Address | Instruction        | Hex        | Description                          |
-| ------- | ------------------ | ---------- | ------------------------------------ |
-| 0x000   | nop                | 0x00000000 | No operation / NOP                   |
-| 0x004   | addi x2, x0, 5     | 0x00500113 | x2 = 5                               |
-| 0x008   | addi x3, x0, 12    | 0x00C00193 | x3 = 12                              |
-| 0x00C   | addi x7, x3, -9    | 0xFF718393 | x7 = 12 - 9 = 3                      |
-| 0x010   | or x4, x7, x2      | 0x0023E233 | x4 = 3 OR 5 = 7                      |
-| 0x014   | and x5, x3, x4     | 0x0041F2B3 | x5 = 12 AND 7 = 4                    |
-| 0x018   | add x5, x5, x4     | 0x004282B3 | x5 = 4 + 7 = 11                      |
-| 0x01C   | beq x5, x7, end    | 0x02728863 | if x5 == x7, jump to end (not taken)|
-| 0x020   | slt x4, x3, x4     | 0x0041A233 | x4 = (12 < 7) = 0                    |
-| 0x024   | beq x4, x0, around | 0x00020463 | if x4 == 0, jump to around (taken)   |
-| 0x028   | addi x5, x0, 0     | 0x00000293 | skipped (branch taken)             |
-| 0x02C   | slt x4, x7, x2     | 0x0023A233 | x4 = (3 < 5) = 1                     |
-| 0x030   | add x7, x4, x5     | 0x005203B3 | x7 = 1 + 11 = 12                     |
-| 0x034   | sub x7, x7, x2     | 0x402383B3 | x7 = 12 - 5 = 7                      |
-| 0x038   | sw x7, 84(x3)      | 0x0471AA23 | Mem[12+84=96] = 7                    |
-| 0x03C   | lw x2, 96(x0)      | 0x06002103 | x2 = Mem[96] = 7                     |
-| 0x040   | add x9, x2, x5     | 0x005104B3 | x9 = 7 + 11 = 18                     |
-| 0x044   | jal x1, 8          | 0x008001EF | x1 = PC+4, jump to PC+8              |
-| 0x048   | addi x2, x0, 1     | 0x00100113 | x2 = 1                               |
-| 0x04C   | add x2, x2, x9     | 0x00910133 | x2 = 1 + 18 = 19                     |
-| 0x050   | sw x2, 32(x3)      | 0x0221A023 | Mem[x3+32] = x2 = 19                 |
-| 0x054   | addi x10, x0, 5    | 0x00500513 | x10 = 5                              |
-| 0x058   | addi x11, x0, 0    | 0x00000593 | x11 = 0                              |
-| 0x05C   | addi x11, x11, 1   | 0x00158593 | x11 = 0 + 1 = 1                      |
-| 0x060   | addi x10, x10, -1  | 0xFFF50513 | x10 = 5 - 1 = 4                      |
-| 0x064   | beq x10, x0, ?     | 0xFE0558E3 | Branch if x10==0 (not taken)         |
-| 0x068   | sw x11, 44(x0)     | 0x06B02223 | Mem[44] = 1                           |
-| 0x06C   | lw x12, 100(x0)    | 0x06402603 | x12 = Mem[100]                        |
-| 0x070   | addi x13, x12, 2   | 0x00261693 | x13 = x12 + 2                         |
-| 0x074   | addi x14, x13, 1   | 0x0016D713 | x14 = x13 + 1                         |
-| 0x078   | sub x15, x14, x2   | 0x40275793 | x15 = x14 - x2                        |
-| 0x07C   | add x16, x13, x13  | 0x00D6C833 | x16 = x13 + x13                        |
-| 0x080   | add x17, x16, x16  | 0x010808B3 | x17 = x16 + x16                        |
+# RV32I Verification Program Table
+
+| Address | Instruction          | Hex       | Description                         |
+|---------|----------------------|-----------|-------------------------------------|
+| 0x000   | `nop`                | 0x00000000 | No operation                        |
+| 0x004   | `addi x2, x0, 5`     | 0x00500113 | x2 = 5                              |
+| 0x008   | `addi x3, x0, 12`    | 0x00C00193 | x3 = 12                             |
+| 0x00C   | `addi x7, x3, -9`    | 0xFF718393 | x7 = 12 - 9 = 3                     |
+| 0x010   | `or x4, x7, x2`      | 0x0023E233 | x4 = 3 OR 5 = 7                     |
+| 0x014   | `and x5, x3, x4`     | 0x0041F2B3 | x5 = 12 AND 7 = 4                   |
+| 0x018   | `add x5, x5, x4`     | 0x004282B3 | x5 = 4 + 7 = 11                     |
+| 0x01C   | `beq x5, x7, end`    | 0x02728863 | if (11==3)? no branch               |
+| 0x020   | `slt x4, x3, x4`     | 0x0041A233 | x4 = (12 < 7) = 0                   |
+| 0x024   | `beq x4, x0, around` | 0x00020463 | if (0==0)? branch taken             |
+| 0x028   | `addi x5, x0, 0`     | 0x00000293 | skipped (branch taken)              |
+| 0x02C   | `slt x4, x7, x2`     | 0x0023A233 | x4 = (3 < 5) = 1                    |
+| 0x030   | `add x7, x4, x5`     | 0x005203B3 | x7 = 1 + 11 = 12                    |
+| 0x034   | `sub x7, x7, x2`     | 0x402383B3 | x7 = 12 - 5 = 7                     |
+| 0x038   | `sw x7, 84(x3)`      | 0x0471AA23 | Mem[12+84=96] = 7                   |
+| 0x03C   | `lw x2, 96(x0)`      | 0x06002103 | x2 = Mem[96] = 7                    |
+| 0x040   | `add x9, x2, x5`     | 0x005104B3 | x9 = 7 + 11 = 18                    |
+| 0x044   | `jal x0, 8` (jmp)    | 0x0080006F | PC = 0x04C (no x1 writeback)        |
+| 0x048   | `addi x2, x0, 1`     | 0x00100113 | skipped (due to jump)               |
+| 0x04C   | `add x2, x2, x9`     | 0x00910133 | x2 = 7 + 18 = 25                    |
+| 0x050   | `sw x2, 32(x3)`      | 0x0221A023 | Mem[12+32=44] = 25                  |
+| 0x054   | `addi x10, x0, 5`    | 0x00500513 | x10 = 5                             |
+| 0x058   | `addi x11, x0, 0`    | 0x00000593 | x11 = 0                             |
+| 0x05C   | `addi x11, x11, 1`   | 0x00158593 | x11 = 1                             |
+| 0x060   | `addi x10, x10, -1`  | 0xFFF50513 | x10 = 4                             |
+| 0x064   | `beq x10, x0, ?`     | 0xFE0558E3 | if (4==0)? not taken                |
+| 0x068   | `sw x11, 44(x0)`     | 0x06B02223 | Mem[44] = 1                         |
+| 0x06C   | `lw x12, 100(x0)`    | 0x06402603 | x12 = Mem[100]                      |
+| 0x070   | `addi x13, x12, 2`   | 0x00261693 | x13 = x12 + 2                       |
+| 0x074   | `addi x14, x13, 1`   | 0x0016D713 | x14 = x13 + 1                       |
+| 0x078   | `sub x15, x14, x2`   | 0x40275793 | x15 = x14 - 25                      |
+| 0x07C   | `add x16, x13, x13`  | 0x00D6C833 | x16 = x13 + x13                     |
+| 0x080   | `add x17, x16, x16`  | 0x010808B3 | x17 = x16 + x16                     |
+
 
 ---
 
