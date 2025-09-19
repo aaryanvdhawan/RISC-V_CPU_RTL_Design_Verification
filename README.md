@@ -38,13 +38,13 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 | 0x05C   | `addi x11, x11, 1`   | 0x00158593 | x11 = 1                             |
 | 0x060   | `addi x10, x10, -1`  | 0xFFF50513 | x10 = 4                             |
 | 0x064   | `beq x10, x0, ?`     | 0xFE0558E3 | if (4==0)? not taken                |
-| 0x068   | `sw x11, 44(x0)`     | 0x06B02223 | Mem[44] = 1                         |
+| 0x068   | `sw x11, 100(x0)`     | 0x06B02223 | Mem[100] = 1                       |
 | 0x06C   | `lw x12, 100(x0)`    | 0x06402603 | x12 = Mem[100]                      |
-| 0x070   | `addi x13, x12, 2`   | 0x00261693 | x13 = x12 + 2                       |
-| 0x074   | `addi x14, x13, 1`   | 0x0016D713 | x14 = x13 + 1                       |
-| 0x078   | `sub x15, x14, x2`   | 0x40275793 | x15 = x14 - 25                      |
-| 0x07C   | `add x16, x13, x13`  | 0x00D6C833 | x16 = x13 + x13                     |
-| 0x080   | `add x17, x16, x16`  | 0x010808B3 | x17 = x16 + x16                     |
+| 0x070   | `slli x13,x12,2  `   | 0x00261693 | x13 = 4                             |
+| 0x074   | `srli x14,x13,1`     | 0x0016D713 | x14 = 2                             |
+| 0x078   | `srai x15,x14,2`     | 0x40275793 | x15 = 0                             |
+| 0x07C   | `xor  x16,x13,x13`   | 0x00D6C833 | x16 = 0                             |
+| 0x080   | `add x17, x16, x16`  | 0x010808B3 | x17 = 0                             |
 
 
 ---
