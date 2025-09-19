@@ -29,7 +29,7 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 | 0x038   | `sw x7, 84(x3)`      | 0x0471AA23 | Mem[24] = 7                   |
 | 0x03C   | `lw x2, 96(x0)`      | 0x06002103 | x2 = Mem[24] = 7                    |
 | 0x040   | `add x9, x2, x5`     | 0x005104B3 | x9 = 7 + 11 = 18                    |
-| 0x044   | `jal x0, 8` (jmp)    | 0x0080006F | PC = 0x04C (no x1 writeback)        |
+| 0x044   | `jal x0, 8` (jmp)    | 0x0080006F | PC = PC+8 (Skips next mem address 0x44)        |
 | 0x048   | `addi x2, x0, 1`     | 0x00100113 | skipped (due to jump)               |
 | 0x04C   | `add x2, x2, x9`     | 0x00910133 | x2 = 7 + 18 = 25                    |
 | 0x050   | `sw x2, 32(x3)`      | 0x0221A023 | Mem[11] = 25                  |
