@@ -1,5 +1,6 @@
 module DataMem (
     input  logic        clk,
+    input  logic        reset,
     input  logic        we,         // Write enable
     input  logic [31:0] addr,       // 32-bit address
     input  logic [31:0] wdata,      // Write data
@@ -12,14 +13,19 @@ module DataMem (
     // Read operation (asynchronous)
     assign rdata = mem[addr[31:2]];
 
-    initial begin
-        for (int i = 0; i < 64; i++) begin
-            mem[i] = 32'b0;
-        end
-    end
+    // initial begin
+    //     for (int i = 0; i < 64; i++) begin
+    //         mem[i] = 32'b0;
+    //     end
+    // end
 
     // Write operation (synchronous)
     always_ff @(posedge clk) begin
+        if (reset) begin
+            for (int i = 0; i < 64; i++) begin
+                mem[i] <= 32'b0;
+            end
+        end else
         if (we) begin
             mem[addr[31:2]] <= wdata;
         end

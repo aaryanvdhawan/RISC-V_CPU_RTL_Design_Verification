@@ -1,5 +1,6 @@
-module RegFile (
+module PipelineRegFile (
     input  logic         clk,
+    input  logic         reset,
     input  logic  [4:0]  rs1_addr,
     input  logic  [4:0]  rs2_addr,
     input  logic  [4:0]  rd_addr,
@@ -9,7 +10,7 @@ module RegFile (
     output logic [31:0]  rs2_data
 );
 
-    logic [31:0] regs [0:31];
+    logic [31:0] regs [31:0];
     // Initialize registers to zero
     // initial begin
     //     integer i;
