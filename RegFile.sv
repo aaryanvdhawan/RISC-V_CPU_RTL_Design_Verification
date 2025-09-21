@@ -9,7 +9,7 @@ module RegFile (
     output logic [31:0]  rs2_data
 );
 
-    logic [31:0] regs [31:0];
+    logic [31:0] regs [0:31];
     // Initialize registers to zero
     initial begin
         integer i;
