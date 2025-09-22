@@ -280,8 +280,6 @@ endproperty
      assert property (p_loop_x10b)
         else $error("reg_file[10] is %0d when pc==0x060, but expected 4", reg_file[10]);
 
-//    assert property (p_loop_store)
-//        else $error("data_mem[25] is %0d when pc==0x068, but expected 1", data_mem[25]);
 
 
     assert property (p_loop_store)
