@@ -80,6 +80,19 @@ module RISCV_Verification (
     // PROPERTY DEFINITIONS (Golden Table Checks)
     // ========================================================
 
+    //x0 must always be 0
+
+     property p_x0_constant;
+        @(posedge clk) disable iff (reset)
+            reg_file[0] == 32'd0;
+    endproperty
+
+      // PC must always be word-aligned
+    property p_pc_aligned;
+        @(posedge clk) disable iff (reset)
+            (pc[1:0] == 2'b00);
+    endproperty
+
     // NOP
     property p_nop;
         @(posedge clk) disable iff (reset)
@@ -227,9 +240,12 @@ endproperty
     // ASSERTIONS
     // ========================================================
 
-    assert property (@(posedge clk) disable iff(reset) reg_file[0] == 32'd0);
+   assert property(p_x0_constant)
+        else $fatal("x0 register modified illegally! reg_file[0]=%0d", reg_file[0]);
 
-    assert property (@(posedge clk) disable iff(reset) (pc[1:0] == 2'b00));
+
+    assert property(p_pc_aligned)
+        else $fatal("PC misaligned: 0x%h", pc);
 
     
     assert property (p_nop)
