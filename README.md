@@ -226,6 +226,12 @@ endproperty
     // ========================================================
     // ASSERTIONS
     // ========================================================
+
+    assert property (@(posedge clk) disable iff(reset) reg_file[0] == 32'd0);
+
+    assert property (@(posedge clk) disable iff(reset) (pc[1:0] == 2'b00));
+
+    
     assert property (p_nop)
     else $error("reg_file[0] is %0d when pc==0x000, but expected 0", reg_file[0]);
 
