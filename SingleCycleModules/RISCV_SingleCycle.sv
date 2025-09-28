@@ -37,22 +37,8 @@ module RISCV_SingleCycle (
             pc <= pc; // Hold the PC value if neither Up nor Down is high
     end
 
-    // always_ff @(posedge clk) begin
-    //     if (reset) begin
-    //         pc <= 32'h0;
-    //     end else begin
-    //         case ({start, Up, Down})
-    //             3'b100: pc <= pc_next; // Start
-    //             3'b010: pc <= pc + 4;    // Up
-    //             3'b001: pc <= pc - 4;    // Down
-    //             default: pc <= pc;        // Hold
-    //     endcase
-    //     end
-    // end
-
     // Instruction Memory
-    // (* dont_touch  = "yes" *)
-    instruction_mem instr_mem (
+    IMEM instr_mem (
         .pc(pc),
         .clk(clk),
         .reset(reset),
@@ -77,7 +63,6 @@ module RISCV_SingleCycle (
     assign funct7 = instr[31:25];
 
     // Control Unit
-    // (* dont_touch  = "yes" *)
     ControlUnit ctrl (
         .opcode(opcode),
         .regWrite(regWrite),
@@ -99,7 +84,6 @@ module RISCV_SingleCycle (
     );
 
     // Register File
-    // (* dont_touch  = "yes" *)
     RegFile reg_file (
         .clk(clk),
         .reset(reset),
@@ -113,7 +97,6 @@ module RISCV_SingleCycle (
     );
 
     // ALU Control
-    // (* dont_touch  = "yes" *)
     ALUControl alu_control (
         .funct7(funct7),
         .funct3(funct3),
@@ -126,7 +109,6 @@ module RISCV_SingleCycle (
     logic [31:0] alu_in_2;
     assign alu_in_2 = aluSrc ? imm : rs2_data;
 
-    // (* dont_touch  = "yes" *)
     ALU alu (
         .a(rs1_data),
         .b(alu_in_2),
@@ -139,7 +121,6 @@ module RISCV_SingleCycle (
     assign pc_target = pc + imm;
 
     // Data Memory
-    // (* dont_touch  = "yes" *)
     DataMem data_mem (
         .clk(clk),
         .reset(reset),
