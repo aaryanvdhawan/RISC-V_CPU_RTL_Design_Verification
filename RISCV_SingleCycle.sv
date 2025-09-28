@@ -14,7 +14,7 @@ module RISCV_SingleCycle (
     logic        regWrite, memWrite, branch, aluSrc, jump;
     logic [1:0]  aluOp, ImmSrc, ResultSrc;
     logic [3:0]  alu_ctrl;
-    logic [31:0] instr, instr_out, pc, pc_next, pc_plus_4, pc_target;
+    logic [31:0] instr, instr_out, pc_next, pc_plus_4, pc_target;
     logic [31:0] imm, rs1_data, rs2_data, alu_result, read_data;
     logic        zero_flag;
 
@@ -51,9 +51,11 @@ module RISCV_SingleCycle (
     // end
 
     // Instruction Memory
+    // (* dont_touch  = "yes" *)
     instruction_mem instr_mem (
         .pc(pc),
         .clk(clk),
+        .reset(reset),
         .write_instr(Imem_write_instr),
         .write_en(Imem_write_en),
         .instr_out(instr_out)
@@ -75,7 +77,7 @@ module RISCV_SingleCycle (
     assign funct7 = instr[31:25];
 
     // Control Unit
-    (* dont_touch  = "yes" *)
+    // (* dont_touch  = "yes" *)
     ControlUnit ctrl (
         .opcode(opcode),
         .regWrite(regWrite),
@@ -89,7 +91,7 @@ module RISCV_SingleCycle (
     );
 
     // Sign Extend
-    (* dont_touch  = "yes" *)
+    // (* dont_touch  = "yes" *)
     SignExtend imm_gen (
         .instr(instr[31:7]),
         .ImmSrc(ImmSrc),
@@ -97,8 +99,10 @@ module RISCV_SingleCycle (
     );
 
     // Register File
+    // (* dont_touch  = "yes" *)
     RegFile reg_file (
         .clk(clk),
+        .reset(reset),
         .rs1_addr(rs1),
         .rs2_addr(rs2),
         .rd_addr(rd),
@@ -109,7 +113,7 @@ module RISCV_SingleCycle (
     );
 
     // ALU Control
-    (* dont_touch  = "yes" *)
+    // (* dont_touch  = "yes" *)
     ALUControl alu_control (
         .funct7(funct7),
         .funct3(funct3),
@@ -122,6 +126,7 @@ module RISCV_SingleCycle (
     logic [31:0] alu_in_2;
     assign alu_in_2 = aluSrc ? imm : rs2_data;
 
+    // (* dont_touch  = "yes" *)
     ALU alu (
         .a(rs1_data),
         .b(alu_in_2),
@@ -134,8 +139,10 @@ module RISCV_SingleCycle (
     assign pc_target = pc + imm;
 
     // Data Memory
+    // (* dont_touch  = "yes" *)
     DataMem data_mem (
         .clk(clk),
+        .reset(reset),
         .we(memWrite),
         .addr(alu_result),
         .wdata(rs2_data),

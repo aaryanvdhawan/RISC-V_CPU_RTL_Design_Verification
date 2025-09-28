@@ -1,5 +1,6 @@
 module RegFile (
     input  logic         clk,
+    input  logic         reset,
     input  logic  [4:0]  rs1_addr,
     input  logic  [4:0]  rs2_addr,
     input  logic  [4:0]  rd_addr,

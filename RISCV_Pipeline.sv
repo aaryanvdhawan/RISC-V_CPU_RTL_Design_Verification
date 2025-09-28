@@ -3,8 +3,7 @@ module RISCV_Pipeline (
     input  logic         reset,
     input  logic         start,
     input  logic [4:0]   SW,
-    output logic [31:0]  pc_out,
-    output logic [31:0]  ResultWB
+    output logic [15:0]  OUT
 );
     logic [31:0] pc_IF_next, pc_IF, 
                  pc_ID, 
@@ -54,7 +53,8 @@ module RISCV_Pipeline (
 
     logic [31:0] SR_A_EX, SR_B_EX, 
                  ReadData_MEM,
-                 ReadData_WB; 
+                 ReadData_WB, 
+                 ResultWB;
 
     logic [31:0] Write_data_MEM;
 
@@ -86,7 +86,7 @@ module RISCV_Pipeline (
         end
 
     end
-    assign pc_out = pc_IF;
+    // assign pc_out = pc_IF;
 
     // Placeholder for Instruction Memory
     IMEM IMEM (
@@ -163,6 +163,8 @@ module RISCV_Pipeline (
         .rd_addr(rd_WB),
         .rd_data(ResultWB),
         .rd_we(RegWrite_WB),
+        .SW(SW),
+        .OUT(OUT),
         .rs1_data(rs1_data_ID),
         .rs2_data(rs2_data_ID)
     );
