@@ -347,7 +347,7 @@ endmodule
 
 
 
-3. Testbench: `RISV_tb`
+3. Testbench_SingleCycle_RISCV: `RISV_tb`
 
 ```verilog
 `timescale 1ns / 1ps
