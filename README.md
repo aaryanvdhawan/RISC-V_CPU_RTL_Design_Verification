@@ -53,7 +53,7 @@ https://luplab.gitlab.io/rvcodecjs/
 ---
 
 
-## 2. Formal Verification module: `RISCV_Verification_Properties`
+## 2. Formal Verification module for SingleCycle: `RISCV_SingleCycle_Verification_Properties`
 `timescale 1ns/1ps
 
 module RISCV_Verification (
