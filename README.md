@@ -8,9 +8,9 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 
 ## 1. Instruction Table
 
+# C Code Snippet
 
-# C code Snippet
-
+```c
 int main() {
     int a = 5;
     int b = 12;
@@ -26,6 +26,7 @@ int main() {
 
     return sum;
 }
+
 
 # RV32I Verification Program Table
 
