@@ -26,7 +26,7 @@ int main() {
 
     return sum;
 }
-
+```
 
 # RV32I Verification Program Table
 
