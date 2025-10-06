@@ -8,6 +8,25 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 
 ## 1. Instruction Table
 
+
+# C code Snippet
+
+int main() {
+    int a = 5;
+    int b = 12;
+    int c = 0;
+    int sum = 0;
+
+    // Main loop: simple decrement + accumulation
+    while (a > 0) {
+        c = b - a;
+        sum += c;
+        a--;
+    }
+
+    return sum;
+}
+
 # RV32I Verification Program Table
 
 We used the following link to generate the instruction code for verification of our RV32I CPU architecture :
