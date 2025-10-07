@@ -11,20 +11,140 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 # C Code Snippet
 
 ```c
+#include <stdio.h>
+
 int main() {
-    int a = 5;
-    int b = 12;
-    int c = 0;
-    int sum = 0;
-
-    // Main loop: simple decrement + accumulation
-    while (a > 0) {
-        c = b - a;
-        sum += c;
-        a--;
+    // Initialize registers (using variables to represent RISC-V registers)
+    int x[32] = {0};  // All registers x0-x31, x0 is hardwired to 0
+    int memory[256] = {0};  // Simple memory simulation
+    
+    // Instruction execution
+    // 0x000: nop - No operation
+    // No C equivalent needed
+    
+    // 0x004: addi x2, x0, 5 - x2 = 5
+    x[2] = x[0] + 5;  // x2 = 0 + 5 = 5
+    
+    // 0x008: addi x3, x0, 12 - x3 = 12
+    x[3] = x[0] + 12;  // x3 = 0 + 12 = 12
+    
+    // 0x00C: addi x7, x3, -9 - x7 = 12 - 9 = 3
+    x[7] = x[3] + (-9);  // x7 = 12 - 9 = 3
+    
+    // 0x010: or x4, x7, x2 - x4 = 3 OR 5 = 7
+    x[4] = x[7] | x[2];  // x4 = 3 | 5 = 7
+    
+    // 0x014: and x5, x3, x4 - x5 = 12 AND 7 = 4
+    x[5] = x[3] & x[4];  // x5 = 12 & 7 = 4
+    
+    // 0x018: add x5, x5, x4 - x5 = 4 + 7 = 11
+    x[5] = x[5] + x[4];  // x5 = 4 + 7 = 11
+    
+    // 0x01C: beq x5, x7, end - if (11==3)? no branch
+    if (x[5] == x[7]) {
+        goto end;
     }
+    
+    // 0x020: slt x4, x3, x4 - x4 = (12 < 7) = 0
+    x[4] = (x[3] < x[4]) ? 1 : 0;  // x4 = (12 < 7) ? 1 : 0 = 0
+    
+    // 0x024: beq x4, x0, around - if (0==0)? branch taken
+    if (x[4] == x[0]) {
+        goto around;
+    }
+    
+    // 0x028: addi x5, x0, 0 - skipped (branch taken)
+    x[5] = x[0] + 0;  // This line would be skipped in actual execution
+    
+around:
+    // 0x02C: slt x4, x7, x2 - x4 = (3 < 5) = 1
+    x[4] = (x[7] < x[2]) ? 1 : 0;  // x4 = (3 < 5) ? 1 : 0 = 1
+    
+    // 0x030: add x7, x4, x5 - x7 = 1 + 11 = 12
+    x[7] = x[4] + x[5];  // x7 = 1 + 11 = 12
+    
+    // 0x034: sub x7, x7, x2 - x7 = 12 - 5 = 7
+    x[7] = x[7] - x[2];  // x7 = 12 - 5 = 7
+    
+    // 0x038: sw x7, 84(x3) - Mem[x3+84] = 7, Mem[12+84=96] = 7
+    memory[96/4] = x[7];  // Assuming word-addressable memory
+    
+    // 0x03C: lw x2, 96(x0) - x2 = Mem[96] = 7
+    x[2] = memory[96/4];  // x2 = 7
+    
+    // 0x040: add x9, x2, x5 - x9 = 7 + 11 = 18
+    x[9] = x[2] + x[5];  // x9 = 7 + 11 = 18
+    
+    // 0x044: jal x0, 8 - Jump to PC+8 = 0x04C
+    goto jump_target;
+    
+    // 0x048: addi x2, x0, 1 - skipped (due to jump)
+    x[2] = x[0] + 1;  // This line is skipped
+    
+jump_target:
+    // 0x04C: add x2, x2, x9 - x2 = 7 + 18 = 25
+    x[2] = x[2] + x[9];  // x2 = 7 + 18 = 25
+    
+    // 0x050: sw x2, 32(x3) - Mem[x3+32] = 25, Mem[12+32=44] = 25
+    memory[44/4] = x[2];
+    
+    // Loop simulation (instructions 0x054-0x064)
+    // 0x054: addi x10, x0, 5 - x10 = 5
+    x[10] = x[0] + 5;
+    
+    // 0x058: addi x11, x0, 0 - x11 = 0
+    x[11] = x[0] + 0;
+    
+    // This simulates the loop from 0x05C to 0x064
+    for (; x[10] > 0; x[10]--) {
+        // 0x05C: addi x11, x11, 1 - x11 = x11 + 1
+        x[11] = x[11] + 1;
+        // 0x060: addi x10, x10, -1 - x10 = x10 - 1
+        // Handled in for loop decrement
+        // 0x064: beq x10, x0, -16 - branch back if x10 == 0
+        // Handled by for loop condition
+    }
+    
+    // 0x068: sw x11, 100(x0) - Mem[100] = 1 (final value after loop)
+    memory[100/4] = x[11];
+    
+    // 0x06C: lw x12, 100(x0) - x12 = Mem[100] = 1
+    x[12] = memory[100/4];
+    
+    // 0x070: slli x13, x12, 2 - x13 = 1 << 2 = 4
+    x[13] = x[12] << 2;
+    
+    // 0x074: srli x14, x13, 1 - x14 = 4 >> 1 = 2 (logical shift)
+    x[14] = (unsigned int)x[13] >> 1;
+    
+    // 0x078: srai x15, x14, 2 - x15 = 2 >> 2 = 0 (arithmetic shift)
+    x[15] = x[14] >> 2;
+    
+    // 0x07C: xor x16, x13, x13 - x16 = 4 XOR 4 = 0
+    x[16] = x[13] ^ x[13];
+    
+    // 0x080: add x17, x16, x16 - x17 = 0 + 0 = 0
+    x[17] = x[16] + x[16];
 
-    return sum;
+end:
+    // Print final register values to verify
+    printf("Final register values:\n");
+    printf("x2: %d\n", x[2]);
+    printf("x3: %d\n", x[3]);
+    printf("x4: %d\n", x[4]);
+    printf("x5: %d\n", x[5]);
+    printf("x7: %d\n", x[7]);
+    printf("x9: %d\n", x[9]);
+    printf("x10: %d\n", x[10]);
+    printf("x11: %d\n", x[11]);
+    printf("x12: %d\n", x[12]);
+    printf("x13: %d\n", x[13]);
+    printf("x14: %d\n", x[14]);
+    printf("x15: %d\n", x[15]);
+    printf("x16: %d\n", x[16]);
+    printf("x17: %d\n", x[17]);
+    
+    return 0;
 }
 ```
 
