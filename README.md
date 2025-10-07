@@ -16,7 +16,7 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 int main() {
     // Initialize registers (using variables to represent RISC-V registers)
     int x[32] = {0};  // All registers x0-x31, x0 is hardwired to 0
-    int memory[256] = {0};  // Simple memory simulation
+    int memory[256] = {0};  // Simple memory simulation for emulating datamemory
     
     // Instruction execution
     // 0x000: nop - No operation
