@@ -198,6 +198,9 @@ https://luplab.gitlab.io/rvcodecjs/
 <img width="1839" height="604" alt="image" src="https://github.com/user-attachments/assets/75239031-1cf3-40b3-bae1-b918f882ee2c" />
 
 
+![netlist_CPU](https://github.com/user-attachments/assets/18b16eb1-f4b9-4fa5-a699-4b90dc9fae68)
+
+
 
 `timescale 1ns/1ps
 
