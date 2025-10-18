@@ -44,6 +44,8 @@ module RISC_Pipeline_tb;
             @(posedge clk);
         end
         start = 0;
+        $finish;
+        $stop;
     end
 
 endmodule
