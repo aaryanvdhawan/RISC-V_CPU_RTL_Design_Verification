@@ -23,8 +23,8 @@ sudo apt install gcc-riscv64-unknown-elf
 # Verify toolchain installation
 riscv64-unknown-elf-gcc --version
 
-# Navigate to project directory
-cd /path/to/your/project
+# Download the folder riscv_compile_test and navigate to project directory
+cd /path/to/your/riscv_compile_test
 
 # Edit tst.c to include the C code you want to disassemble
 nano tst.c  # Replace with your preferred editor (e.g., vim, code)
