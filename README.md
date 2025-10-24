@@ -16,7 +16,7 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 <img width="827" height="424" alt="image" src="https://github.com/user-attachments/assets/9e6d882a-3a16-40b4-a3f1-e4bb0e087fe3" />
 
 
-## RISC-V Disassembly Commands
+## risc64-gcc-elf toolchain Disassembly Commands
 
 ```bash
 # Install RISC-V toolchain
