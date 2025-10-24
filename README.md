@@ -42,7 +42,7 @@ make
 cat disasm.txt
 ```
 
-# C Code Snippet
+# Target C Code Snippet
 
 ```c
 #include <stdio.h>
