@@ -11,6 +11,34 @@ This document contains a SystemVerilog verification module for a RISCV single-cy
 
 ## 1. Instruction Table
 
+# Generate low level instructions from C code using risc64-gcc-elf toolchain
+
+## RISC-V Disassembly Commands
+
+```bash
+# Install RISC-V toolchain
+sudo apt update
+sudo apt install gcc-riscv64-unknown-elf
+
+# Verify toolchain installation
+riscv64-unknown-elf-gcc --version
+
+# Navigate to project directory
+cd /path/to/your/project
+
+# Edit tst.c to include the C code you want to disassemble
+nano tst.c  # Replace with your preferred editor (e.g., vim, code)
+
+# Clean previous build artifacts
+make clean
+
+# Compile and generate disassembly
+make
+
+# View disassembly with hex codes and instructions
+cat disasm.txt
+```
+
 # C Code Snippet
 
 ```c
