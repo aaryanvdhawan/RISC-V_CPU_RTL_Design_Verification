@@ -1,0 +1,17 @@
+
+tst.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .init:
+
+00000000 <_start>:
+   0:	00001117          	auipc	sp,0x1
+   4:	00010113          	mv	sp,sp
+   8:	008000ef          	jal	10 <main>
+   c:	0000006f          	j	c <_start+0xc>
+
+Disassembly of section .text:
+
+00000010 <main>:
+  10:	00a00513          	li	a0,10
+  14:	00008067          	ret
