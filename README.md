@@ -3,7 +3,12 @@
 This document contains a SystemVerilog verification module for a RISCV single-cycle CPU along with its testbench. The verification module checks registers, memory, and instruction execution correctness.
 
 
+<img width="1059" height="1050" alt="image" src="https://github.com/user-attachments/assets/df74740a-f426-4fcb-8040-2ccab54e8dbb" />
+
+
+
 ![netlist_CPU](https://github.com/user-attachments/assets/18b16eb1-f4b9-4fa5-a699-4b90dc9fae68)
+
 
 ---
 
