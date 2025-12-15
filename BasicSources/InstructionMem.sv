@@ -54,7 +54,7 @@ module IMEM  (
                 mem[i] <= 32'h00000000;
             end
         end
-        if (write_en) begin
+        else if (write_en) begin
             mem[pc[31:2]] <= write_instr;
         end
     end
